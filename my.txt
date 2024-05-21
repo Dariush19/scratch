@@ -1,0 +1,52 @@
+import mlflow
+import mlflow.keras
+
+# Log the model with MLflow
+mlflow.keras.log_model(model, "model")
+
+mlflow models serve -m "runs:/<run_id>/model" -p 1234
+
+import requests
+import json
+
+url = 'http://<your-databricks-instance>:1234/invocations'
+headers = {'Content-Type': 'application/json'}
+
+data = {
+    'columns': ['col1', 'col2', 'col3'],
+    'data': [[value1, value2, value3]]
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(data))
+print(response.json())
+
+# Step 1: Import required libraries
+from tensorflow.keras.models import load_model
+import mlflow
+import mlflow.keras
+
+# Step 2: Load the model from DBFS
+model_path = '/dbfs/path/to/model.h5'
+model = load_model(model_path)
+
+# Step 3: Log the model with MLflow
+mlflow.keras.log_model(model, "model")
+
+# Step 4: Serve the model
+# Run this in a separate terminal or notebook cell
+!mlflow models serve -m "runs:/<run_id>/model" -p 1234
+
+# Step 5: Make a prediction via the API
+import requests
+import json
+
+url = 'http://<your-databricks-instance>:1234/invocations'
+headers = {'Content-Type': 'application/json'}
+
+data = {
+    'columns': ['col1', 'col2', 'col3'],
+    'data': [[value1, value2, value3]]
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(data))
+print(response.json())
